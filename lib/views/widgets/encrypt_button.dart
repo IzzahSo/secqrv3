@@ -24,6 +24,7 @@ class EncryptButton extends StatelessWidget {
           Expanded(
               child: Container(
                   height: 50,
+                  // padding: const EdgeInsets.all(15),
                   child: const Center(
                       child: Text('Encrypt QR with AES',
                           style: TextStyle(

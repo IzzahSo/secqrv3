@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "562379353209",
+    "project_id": "secqrv3",
+    "storage_bucket": "secqrv3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562379353209:android:5da17565a00a4513c438a8",
+        "android_client_info": {
+          "package_name": "com.example.secqrv3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562379353209-lc2vj2la25b57r5qt53h8hd7be53p7rt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsgUYC_bo9pxGRjAfXy7pL193coFn6kUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562379353209-lc2vj2la25b57r5qt53h8hd7be53p7rt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

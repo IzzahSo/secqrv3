@@ -114,12 +114,14 @@ class _CheckURLState extends State<CheckURL> {
                               color: Colors.yellow, size: 50),
                         ),
                         SizedBox(width: 2),
-                        Text(
-                          'Unsecure link. \nPlease proceed with caution',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
+                        Expanded(
+                          child: Text(
+                            'Unsecure link. \nPlease proceed with caution',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
                           ),
                         ),
                       ],

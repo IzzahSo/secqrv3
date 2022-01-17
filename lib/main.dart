@@ -61,6 +61,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: Dark().theme,
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: _selectedItemPosition ==0 
             ? const GenerateQR()
             : _selectedItemPosition == 1

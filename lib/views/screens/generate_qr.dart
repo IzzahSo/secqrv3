@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:secqrv3/AESEncrypt/aes.dart';
-import 'package:secqrv3/views/widgets/encrypt_button.dart';
+// import 'package:secqrv3/views/widgets/encrypt_button.dart';
 import 'package:secqrv3/views/widgets/input.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -105,10 +105,10 @@ class _GenerateQRState extends State<GenerateQR> {
                   size: 250,
                   backgroundColor: Colors.white)),
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: EncryptButton(saveQrCode),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: EncryptButton(saveQrCode),
+          // ),
           Padding(
               padding: const EdgeInsets.all(20), child: SaveButton(saveQrCode)),
         ]);
