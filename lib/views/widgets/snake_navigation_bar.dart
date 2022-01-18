@@ -36,8 +36,9 @@ class _SnakeNavigationBarWidgetState extends State<SnakeNavigationBarWidget> {
         icon: Icon(Icons.qr_code_scanner_rounded), label: 'QR Scanner'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.qr_code_rounded), label: 'QR Generator'),
-    const BottomNavigationBarItem(
-        icon: Icon(Icons.history_rounded), label: 'History'),
+    // const BottomNavigationBarItem(
+    //     icon: Icon(Icons.history_rounded), label: 'History'),
+    
   ];
 
   @override

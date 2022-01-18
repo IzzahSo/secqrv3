@@ -1,14 +1,18 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:secqrv3/themes/themes.dart';
 import 'package:secqrv3/views/screens/checkurl.dart';
 import 'package:secqrv3/views/screens/generate_qr.dart';
 import 'package:secqrv3/views/screens/homepage.dart';
+import 'package:secqrv3/views/viewmodel/bloc/bloc_observer.dart';
+import 'package:secqrv3/views/screens/url/url_screen.dart';
 // import 'package:secqrv3/views/widgets/snake_navigation_bar.dart';
 
 void main() {
+  Bloc.observer = CommonBlocObserver();
   runApp(const MyApp());
 }
 
@@ -66,7 +70,7 @@ class _MyAppState extends State<MyApp> {
             ? const GenerateQR()
             : _selectedItemPosition == 1
               ? HomePage()
-              : const CheckURL(),
+              : UrlScreen(),
 
         bottomNavigationBar: SnakeNavigationBar.color(
           behaviour: _snakeBarStyle,
