@@ -1,10 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:secqrv3/services/url_scan_service.dart';
 import 'package:secqrv3/themes/themes.dart';
 // import 'package:secqr/views/widgets/custom_dialog.dart';
 // import 'package:url_launcher/url_launcher.dart';
 //paste links package
+// import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class CheckURL extends StatefulWidget {
   const CheckURL();
@@ -16,7 +19,7 @@ class CheckURL extends StatefulWidget {
 class _CheckURLState extends State<CheckURL> {
   TextEditingController field = TextEditingController();
   String pasteValue = '';
-
+  
   // void refreshOnTextFieldTextChange() {
   //   setState(() {});
   // }
@@ -35,6 +38,8 @@ class _CheckURLState extends State<CheckURL> {
   //   textEditingController.dispose();
   //   super.dispose();
   // }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -71,83 +76,94 @@ class _CheckURLState extends State<CheckURL> {
                             color: Theme.of(context).accentColor))),
               ),
               const SizedBox(height: 50),
-              Container(
-                height: 250,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: kSecondaryLight,
-                    borderRadius: BorderRadius.circular(40)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 50,
-                            right: 50,
-                            top: 20,
-                          ),
-                          child: Icon(Icons.circle,
-                              color: Colors.green, size: 50),
-                        ),
-                        SizedBox(width: 2),
-                        Text(
-                          'Secure link',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 50,
-                            right: 50,
-                            top: 20,
-                          ),
-                          child: Icon(Icons.circle,
-                              color: Colors.yellow, size: 50),
-                        ),
-                        SizedBox(width: 2),
-                        Expanded(
-                          child: Text(
-                            'Unsecure link. \nPlease proceed with caution',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 50,
-                            right: 50,
-                            top: 20,
-                          ),
-                          child:
-                              Icon(Icons.circle, color: Colors.red, size: 50),
-                        ),
-                        SizedBox(width: 2),
-                        Text(
-                          'Malicious link! \nDo not proceed!!',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ],
-                    ),
+              // Container(
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: <Widget>[
+              //       new CircularPercentIndicator(
+              //           radius: 130,
+              //       ),
+              //     ],
+              //   )
+              // ),
+              // const SizedBox(height: 50),
+              // Container(
+              //   height: 250,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //       color: kSecondaryLight,
+              //       borderRadius: BorderRadius.circular(40)),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Row(
+              //         children: const [
+              //           Padding(
+              //             padding: EdgeInsets.only(
+              //               left: 50,
+              //               right: 50,
+              //               top: 20,
+              //             ),
+              //             child: Icon(Icons.circle,
+              //                 color: Colors.green, size: 50),
+              //           ),
+              //           SizedBox(width: 2),
+              //           Text(
+              //             'Secure link',
+              //             style: TextStyle(
+              //               fontSize: 15,
+              //               fontWeight: FontWeight.bold,
+              //               letterSpacing: 2,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       Row(
+              //         children: const [
+              //           Padding(
+              //             padding: EdgeInsets.only(
+              //               left: 50,
+              //               right: 50,
+              //               top: 20,
+              //             ),
+              //             child: Icon(Icons.circle,
+              //                 color: Colors.yellow, size: 50),
+              //           ),
+              //           SizedBox(width: 2),
+              //           Expanded(
+              //             child: Text(
+              //               'Unsecure link. \nPlease proceed with caution',
+              //               style: TextStyle(
+              //                 fontSize: 15,
+              //                 fontWeight: FontWeight.bold,
+              //                 letterSpacing: 2,
+              //               ),
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       Row(
+              //         children: const [
+              //           Padding(
+              //             padding: EdgeInsets.only(
+              //               left: 50,
+              //               right: 50,
+              //               top: 20,
+              //             ),
+              //             child:
+              //                 Icon(Icons.circle, color: Colors.red, size: 50),
+              //           ),
+              //           SizedBox(width: 2),
+              //           Text(
+              //             'Malicious link! \nDo not proceed!!',
+              //             style: TextStyle(
+              //               fontSize: 15,
+              //               fontWeight: FontWeight.bold,
+              //               letterSpacing: 2,
+              //             ),
+              //           ),
+              //         ],
+                    // ),
 
                     //   Padding(
                     //     padding: const EdgeInsets.only(
@@ -180,24 +196,24 @@ class _CheckURLState extends State<CheckURL> {
                     //     ),
                     //   ),
                     // ],
-                  ],
-                ),
-              ),
-              // Expanded(
-              //   child: LayoutBuilder(builder: (context, constraints){
-              //     return Row(
-              //       children: [
-              //         Row(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: [
-              //             Text('')
-              //           ],
-              //         )
-              //       ],
-              //     );
-              //   }
-              //   ),
-              // ),
+          //         ],
+          //       ),
+          //     ),
+          //     // Expanded(
+          //     //   child: LayoutBuilder(builder: (context, constraints){
+          //     //     return Row(
+          //     //       children: [
+          //     //         Row(
+          //     //           crossAxisAlignment: CrossAxisAlignment.start,
+          //     //           children: [
+          //     //             Text('')
+          //     //           ],
+          //     //         )
+          //     //       ],
+          //     //     );
+          //     //   }
+          //     //   ),
+          //     // ),
             ],
           ),
         ),

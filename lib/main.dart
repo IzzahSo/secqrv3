@@ -71,6 +71,8 @@ class _MyAppState extends State<MyApp> {
             : _selectedItemPosition == 1
               ? HomePage()
               : UrlScreen(),
+              // : CheckURL(), 
+              //need to tweak code by adding routes for encrypted qr and database
 
         bottomNavigationBar: SnakeNavigationBar.color(
           behaviour: _snakeBarStyle,

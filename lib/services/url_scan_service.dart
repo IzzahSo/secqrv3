@@ -2,6 +2,7 @@
 // ignore_for_file: prefer_const_declarations
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:secqrv3/models/push_url_scan.dart';
 import 'package:secqrv3/models/url_scan.dart';
 import 'package:secqrv3/models/url_scan_report.dart';
@@ -43,8 +44,10 @@ class UrlScanService {
       response = await dio
           .get(urlApi + "apikey=" + apiKey + "&resource=" + urlResource);
       if (response.statusCode == 200) {
+        // var malicious = UrlScanReport.fromJson(response.data["positives"]);
         var urlScanReport = UrlScanReport.fromJson(response.data);
         return urlScanReport;
+        // return malicious;
       } else {
         print("\nError status code in fetchUrlScanReport\n");
       }

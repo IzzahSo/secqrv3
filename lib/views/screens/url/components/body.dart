@@ -67,6 +67,92 @@ class _BodyState extends State<Body> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                        child: BlocBuilder<UrlScanBloc, UrlScanState>(
+                          builder: (context, currentState){
+                            //need to tweak on background colours, and text size
+                            if(currentState is SucceedScanUrlState){
+                              if (currentState.urlScanReport.positives == -1) {
+                                //The site has not included in TotalVirus
+                                //background: Gray
+                                return Container(
+                                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                  decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: const <Widget>[
+                                      Text(
+                                        "This URL has never been registered!"
+                                            "\nPlease proceed with caution.",
+                                        style: TextStyle(
+                                          color: kPrimaryDark,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                        Icon(Icons.security_rounded, color: Colors.yellow,),
+                                    ],
+                                  ),
+                                );
+                              }
+                              else if (currentState.urlScanReport.positives != 0){
+                                //if site is found malicious
+                                //background: red
+                                return Container(
+                                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                  decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.circular(20),),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: const <Widget>[
+                                      Text(
+                                        "Malicious URL"
+                                            "\nDo not proceed to this site!!",
+                                        style: TextStyle(
+                                          color: kPrimaryDark,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.security_outlined,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              else{
+                                //if its a safe url
+                                //background: green
+                                return Container(
+                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                    decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(20),),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: const <Widget>[
+                                        Text(
+                                          "Safe URL"
+                                          "\nDon't worry site is safe~",
+                                          style: TextStyle(
+                                            color: kPrimaryDark,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.green,
+                                        ),
+                                      ],
+                                    ),
+                                );
+                              }
+                            }
+                            return OutputText(text: "",);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -74,7 +160,7 @@ class _BodyState extends State<Body> {
                             BlocBuilder<UrlScanBloc, UrlScanState>(
                               builder: (context, currentState){
                                 if(currentState is SucceedScanUrlState){
-                                  return TitleText(title: "${currentState.urlScanReport.total}");
+                                  return TitleText(title: "${currentState.urlScanReport.positives} / ${currentState.urlScanReport.total}");
                                 } else {
                                   return TitleText(title: "0"); //Return there is no link inside the report yet
                                 }
@@ -83,6 +169,7 @@ class _BodyState extends State<Body> {
                           ],
                         ),
                       ),
+                      //need to simplify this, create another class, use flatbutton and direct it to the details stuff
                       Padding(
                         padding: EdgeInsets.only(left: SizeConfig.defaultSize! * 2, right: SizeConfig.defaultSize! * 2, bottom: SizeConfig.defaultSize! * 2),
                         child: BlocBuilder<UrlScanBloc, UrlScanState>(
