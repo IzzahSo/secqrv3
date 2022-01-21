@@ -32,7 +32,32 @@ class _ScanScreenState extends State<ScanScreen> {
         useSafeArea: true);
   }
 
-  void onQRViewCreated(QRViewController qrViewController) {
+  Widget _buildQrView(BuildContext context){
+    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+            MediaQuery.of(context).size.height < 400)
+        ? 150.0
+        : 300.0;
+    // To ensure the Scanner view is properly sizes after rotation
+    // we need to listen for Flutter SizeChanged notification and update controller
+    return QRView(
+      key: qrViewKey,
+      // You can choose between CameraFacing.front or CameraFacing.back. Defaults to CameraFacing.back
+      // cameraFacing: CameraFacing.front,
+      onQRViewCreated: _onQRViewCreated,
+      // Choose formats you want to scan. Defaults to all formats.
+      // formatsAllowed: [BarcodeFormat.qrcode],
+      overlay: QrScannerOverlayShape(
+        borderColor: Colors.red,
+        borderRadius: 10,
+        borderLength: 30,
+        borderWidth: 10,
+        cutOutSize: scanArea,
+      ),
+    );
+  }
+
+  void _onQRViewCreated(QRViewController qrViewController) {
     setState(() {
       this.qrViewController = qrViewController;
     });
@@ -95,38 +120,76 @@ class _ScanScreenState extends State<ScanScreen> {
     FocusScope.of(context).requestFocus(FocusNode());
 
     if (cameraPermissionStatus.isGranted)
-      return Stack(
-          fit: StackFit.expand,
-          alignment: AlignmentDirectional.bottomCenter,
+      return Scaffold(
+        body: Column(
           children: <Widget>[
-            QRView(
-                key: qrViewKey,
-                onQRViewCreated: onQRViewCreated,
-                overlay: QrScannerOverlayShape(borderColor: Colors.white)),
-            Positioned(
-                bottom: 20,
-                width: 200,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      IconButton(
-                          icon: Icon(isFlashlightOff
-                              ? Icons.flash_off
-                              : Icons.flash_on),
-                          color: Colors.white,
-                          onPressed: toggleCameraFlash),
-                      IconButton(
-                          icon: const Icon(Icons.cameraswitch),
-                          color: Colors.white,
-                          onPressed: flipCamera),
-                      IconButton(
-                          icon: const Icon(Icons.photo_library),
-                          color: Colors.white,
-                          disabledColor:
-                              const Color.fromRGBO(255, 255, 255, 0.3),
-                          onPressed: scanImageFromGallery)
-                    ]))
-          ]);
+            Expanded(flex: 4, child: _buildQrView(context)),
+            Expanded(
+                flex: 1,
+                child: Stack(
+                  fit: StackFit.expand,
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: <Widget>[
+                    Positioned(
+                      bottom: 20,
+                      width: 200,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            IconButton(
+                                icon: Icon(isFlashlightOff
+                                    ? Icons.flash_off
+                                    : Icons.flash_on),
+                                color: Colors.white,
+                                onPressed: toggleCameraFlash),
+                            IconButton(
+                                icon: const Icon(Icons.cameraswitch),
+                                color: Colors.white,
+                                onPressed: flipCamera),
+                            IconButton(
+                                icon: const Icon(Icons.photo_library),
+                                color: Colors.white,
+                                disabledColor:
+                                    const Color.fromRGBO(255, 255, 255, 0.3),
+                                onPressed: scanImageFromGallery)
+                        ])),
+                  ]),
+            ),
+          ],
+        ),
+          // child: Stack(
+          //   fit: StackFit.expand,
+          //   alignment: AlignmentDirectional.bottomCenter,
+          //   children: <Widget>[
+          //     QRView(
+          //         key: qrViewKey,
+          //         onQRViewCreated: onQRViewCreated,
+          //         overlay: QrScannerOverlayShape(borderColor: Colors.white)),
+          //     Positioned(
+          //         bottom: 20,
+          //         width: 200,
+          //         child: Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: <Widget>[
+          //               IconButton(
+          //                   icon: Icon(isFlashlightOff
+          //                       ? Icons.flash_off
+          //                       : Icons.flash_on),
+          //                   color: Colors.white,
+          //                   onPressed: toggleCameraFlash),
+          //               IconButton(
+          //                   icon: const Icon(Icons.cameraswitch),
+          //                   color: Colors.white,
+          //                   onPressed: flipCamera),
+          //               IconButton(
+          //                   icon: const Icon(Icons.photo_library),
+          //                   color: Colors.white,
+          //                   disabledColor:
+          //                       const Color.fromRGBO(255, 255, 255, 0.3),
+          //                   onPressed: scanImageFromGallery)
+          //             ]))
+          //   ]),
+      );
     else if (cameraPermissionStatus.isDenied)
       return Center(child: GrantPermissionButton(requestCameraPermission));
     else
