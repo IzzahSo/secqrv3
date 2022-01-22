@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:secqrv3/views/viewmodel/bloc_export.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/widgets/components/SizeConfig.dart';
 import 'package:secqrv3/views/widgets/snake_navigation_bar.dart';

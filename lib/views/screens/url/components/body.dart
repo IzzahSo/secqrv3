@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:secqrv3/views/viewmodel/bloc_export.dart';
 import 'package:secqrv3/themes/themes.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/widgets/components/loading.dart';
@@ -69,7 +68,6 @@ class _BodyState extends State<Body> {
                         padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
                         child: BlocBuilder<UrlScanBloc, UrlScanState>(
                           builder: (context, currentState){
-                            //need to tweak on background colours, and text size
                             if(currentState is SucceedScanUrlState){
                               if (currentState.urlScanReport.positives == -1) {
                                 //The site has not included in TotalVirus
@@ -147,7 +145,24 @@ class _BodyState extends State<Body> {
                                 );
                               }
                             }
-                            return OutputText(text: "",);
+                            return Container(
+                              padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                              decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: const <Widget>[
+                                  Text(
+                                    "Checking the URL in VirusTotal",
+                                    style: TextStyle(
+                                      color: kPrimaryDark,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                    Icon(Icons.security_rounded, color: Colors.white,),
+                                ],
+                              ),
+                            );
                           },
                         ),
                       ),

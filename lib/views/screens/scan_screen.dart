@@ -4,9 +4,14 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:secqrv3/models/url_scan.dart';
+import 'package:secqrv3/models/url_scan_report.dart';
+import 'package:secqrv3/services/url_scan_service.dart';
+import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
+import 'package:secqrv3/views/widgets/custom_dialog/warning_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:secqrv3/views/widgets/grant_permission_button.dart';
-import 'package:secqrv3/views/widgets/custom_dialog.dart';
+import 'package:secqrv3/views/widgets/custom_dialog/custom_dialog.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen();
@@ -21,16 +26,32 @@ class _ScanScreenState extends State<ScanScreen> {
   QRViewController? qrViewController;
   PermissionStatus cameraPermissionStatus = PermissionStatus.denied;
   bool isFlashlightOff = false;
+  final UrlScan urlScan = UrlScan();
 
   void showCustomDialog(String barcodeText) async {
     final bool canLaunchUrl = await canLaunch(barcodeText);
-    showDialog(
+    
+    if(!urlScan.detected) {
+    //return malicious warning
+      return showDialog(
+        context: context,
+        builder: (_) => WarningDialog(
+          barcodeText, qrViewController!.resumeCamera),
+        barrierDismissible: false,
+        useSafeArea: true);
+    }
+        
+    else{
+      return showDialog(
         context: context,
         builder: (_) => CustomDialog(
             barcodeText, canLaunchUrl, qrViewController!.resumeCamera),
         barrierDismissible: false,
         useSafeArea: true);
+    }
+    
   }
+
 
   Widget _buildQrView(BuildContext context){
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
