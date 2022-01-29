@@ -1,18 +1,25 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:secqrv3/themes/themes.dart';
-import 'package:secqrv3/views/screens/checkurl.dart';
 import 'package:secqrv3/views/screens/generate_qr.dart';
+import 'package:secqrv3/views/screens/history.dart';
 import 'package:secqrv3/views/screens/homepage.dart';
 import 'package:secqrv3/views/viewmodel/bloc/bloc_observer.dart';
 import 'package:secqrv3/views/screens/url/url_screen.dart';
 // import 'package:secqrv3/views/widgets/snake_navigation_bar.dart';
 
-void main() {
+//TODO: Add routes for page navigation
+
+Future<void> main() async {
   Bloc.observer = CommonBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  
   runApp(const MyApp());
 }
 
@@ -49,6 +56,9 @@ class _MyAppState extends State<MyApp> {
         icon: Icon(Icons.qr_code_scanner_rounded), label: 'QR Scanner'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.check_circle_outline_rounded), label: 'Check link'),
+    //need to edit Firebase page
+    // const BottomNavigationBarItem(
+    //   icon: Icon(Icons.history_outlined), label: 'History'),
   ];
 
   @override
@@ -71,7 +81,9 @@ class _MyAppState extends State<MyApp> {
             : _selectedItemPosition == 1
               ? HomePage()
               : UrlScreen(),
-              // : CheckURL(), 
+              // : _selectedItemPosition == 2
+              //   ? UrlScreen() 
+              //   : HistoryListData(),
               //need to tweak code by adding routes for encrypted qr and database
 
         bottomNavigationBar: SnakeNavigationBar.color(

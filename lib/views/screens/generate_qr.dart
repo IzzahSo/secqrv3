@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:secqrv3/AESEncrypt/aes.dart';
+import 'package:secqrv3/repository/database_serv.dart';
 // import 'package:secqrv3/views/widgets/encrypt_button.dart';
 import 'package:secqrv3/views/widgets/input.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:secqrv3/views/widgets/save_button.dart';
+
+//TODO: Import images into Firestore if possible
 
 class GenerateQR extends StatefulWidget {
   const GenerateQR();
@@ -34,8 +37,11 @@ class _GenerateQRState extends State<GenerateQR> {
   }
 
   void encryptCode(String text) {
-    if (textEditingController.text.isNotEmpty)
+    if (textEditingController.text.isNotEmpty){
       encryption.encryptMsg(textEditingController.text).base16;
+      FirestoreProvider().updateText(
+          title: "Generated QR", qrCodeText: textEditingController.text,);
+    }
   }
 
   void saveQrCode() {

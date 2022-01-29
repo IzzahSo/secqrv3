@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secqrv3/models/url_scan_report.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
+import 'package:secqrv3/themes/themes.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/viewmodel/states/url_scan_state.dart';
 import 'package:secqrv3/views/widgets/components/output_text.dart';
@@ -42,8 +43,13 @@ class WarningDialog extends StatelessWidget {
       children: [
         AlertDialog(
             scrollable: true,
-            title: const Text("WARNING! This is a malicious URL"),
-            content: Text(qrcodeText),
+            backgroundColor: Colors.white,
+            title: const Text("WARNING!\nThis is a Malicious Url", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red),),
+            content: Text("QR Code Text:\n" + qrcodeText + 
+                      "\n\nPlease do not proceed to this site", 
+                      style: TextStyle(color: kPrimaryDark),
+                      ),
+            
             actions: <TextButton>[
               TextButton(
                   onPressed: () => "",
@@ -53,10 +59,10 @@ class WarningDialog extends StatelessWidget {
                   child: const Text('Close'))
             ]),
         Positioned(
-            top: 170,
+            top: 150,
             child: CircleAvatar(
               backgroundColor: Colors.red,
-              radius: 40,
+              radius: 50,
               child: Icon(
                 Icons.error,
                 color: Colors.white,

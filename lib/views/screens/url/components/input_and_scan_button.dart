@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:secqrv3/models/url_scan.dart';
+import 'package:secqrv3/repository/database_serv.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
 import 'package:secqrv3/views/widgets/components/alert_dialog.dart';
@@ -15,6 +17,7 @@ class InputAndScanButton extends StatelessWidget {
 
   final TextEditingController ? urlTextController;
   final UrlScanBloc ? scanBloc;
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,16 @@ class InputAndScanButton extends StatelessWidget {
             } else if(UrlScanService.urlResource!=input){
               UrlScanService.urlResource = input;
               scanBloc?.add(FetchUrlScanReportEvent());
+              //add into Firestore for history reference
+              // if(!UrlScan().detected){
+              //   FirestoreProvider()
+              //     .createOrUpdateUrl(title: "Check URL", url: input, status: "safe");
+              // } else if (UrlScan().detected){
+              //   FirestoreProvider().createOrUpdateUrl(
+              //       title: "Check URL", url: input, status: "malicious");
+              // }
             }
+            
           }, 
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(defaultSize!*2),

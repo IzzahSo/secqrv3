@@ -5,16 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secqrv3/models/url_scan_report.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
+import 'package:secqrv3/themes/themes.dart';
+import 'package:secqrv3/views/screens/url/components/input_and_scan_button.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
+import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
 import 'package:secqrv3/views/viewmodel/states/url_scan_state.dart';
+import 'package:secqrv3/views/widgets/components/SizeConfig.dart';
 import 'package:secqrv3/views/widgets/components/output_text.dart';
+import 'package:secqrv3/views/widgets/components/title_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomDialog extends StatelessWidget {
   final String qrcodeText;
   final bool canLaunchQrCodeText;
   final Future<void> Function() resumeCamera;
-
 
   const CustomDialog(
       this.qrcodeText, this.canLaunchQrCodeText, this.resumeCamera,);
@@ -31,10 +35,12 @@ class CustomDialog extends StatelessWidget {
     await launch(qrcodeText);
   }
 
+
   void dismissCustomDialog(BuildContext context) async {
     Navigator.pop(context, null);
     await resumeCamera();
   }
+//TODO: change the UI a bit, Refer here: https://stackoverflow.com/questions/53913192/flutter-how-to-change-the-width-of-an-alertdialog
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +78,10 @@ class CustomDialog extends StatelessWidget {
         ),
       ],
     );
-   
 
+
+  
+      
     // return AlertDialog(
     //   scrollable: true,
     //   title: const Text('QR code text:'),

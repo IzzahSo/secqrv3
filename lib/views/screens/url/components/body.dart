@@ -145,6 +145,33 @@ class _BodyState extends State<Body> {
                                 );
                               }
                             }
+                            else if( currentState is FailedScanUrlState){
+                              return Container(
+                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                    decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(20),),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: const <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            "Safe URL"
+                                            "\nThe URL is not included in VitusTotal"
+                                            "\nPlease proceed with caution!",
+                                            style: TextStyle(
+                                              color: kPrimaryDark,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.security_outlined,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                );
+                            }
                             return Container(
                               padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
                               decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),

@@ -1,13 +1,20 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-// ignore: import_of_legacy_library_into_null_safe
+// ignore: import_of_legacy_librto_null_safe
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:secqrv3/models/url_scan.dart';
 import 'package:secqrv3/models/url_scan_report.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
+import 'package:secqrv3/themes/themes.dart';
+import 'package:secqrv3/views/screens/qr_details.dart';
+import 'package:secqrv3/views/screens/qr_result.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
+import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
 import 'package:secqrv3/views/widgets/custom_dialog/warning_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:secqrv3/views/widgets/grant_permission_button.dart';
@@ -27,30 +34,59 @@ class _ScanScreenState extends State<ScanScreen> {
   PermissionStatus cameraPermissionStatus = PermissionStatus.denied;
   bool isFlashlightOff = false;
   final UrlScan urlScan = UrlScan();
+  UrlScanReport ? urlScanReport = UrlScanReport();
+  UrlScanBloc ? urlScanBloc;
+
+  
+  final _controller = TextEditingController();
+
+  get create => null;
 
   void showCustomDialog(String barcodeText) async {
     final bool canLaunchUrl = await canLaunch(barcodeText);
+    // var input = barcodeText;
+  
+    // showDialog(
+    //     context: context,
+    //     builder: (_) => CustomDialog(
+    //         barcodeText, canLaunchUrl, qrViewController!.resumeCamera,),
+    //     barrierDismissible: false,
+    //     useSafeArea: true);
     
-    if(!urlScan.detected) {
-    //return malicious warning
-      return showDialog(
-        context: context,
-        builder: (_) => WarningDialog(
-          barcodeText, qrViewController!.resumeCamera),
-        barrierDismissible: false,
-        useSafeArea: true);
-    }
-        
-    else{
-      return showDialog(
-        context: context,
-        builder: (_) => CustomDialog(
-            barcodeText, canLaunchUrl, qrViewController!.resumeCamera),
-        barrierDismissible: false,
-        useSafeArea: true);
-    }
+    // _urlScanBloc = BlocProvider.of<UrlScanBloc>(context);
+    UrlScanService.urlResource = barcodeText;
+    urlScanBloc?.add(FetchUrlScanReportEvent());
     
+    //somehow it doesn't retrieve
+    if(urlScanReport?.positives != 0){
+        //return malicious warning
+        showDialog(
+            context: context,
+            builder: (_) =>
+                WarningDialog(barcodeText, qrViewController!.resumeCamera),
+            barrierDismissible: false,
+            useSafeArea: true);
+    }
+    else {
+        showDialog(
+            context: context,
+            builder: (_) => CustomDialog(
+                barcodeText, canLaunchUrl, qrViewController!.resumeCamera),
+            barrierDismissible: false,
+            useSafeArea: true);
+    }
+      
   }
+
+  // Future<Widget> showResult(BuildContext context, String barcodeText) async {
+  //   return Scaffold(
+  //     body: Center(
+  //       child: BlocProvider(
+  //         create: (context) => UrlScanBloc(),
+  //         child: QRResult(barcodeText),
+  //   ),
+  //     ));
+  // }
 
 
   Widget _buildQrView(BuildContext context){
@@ -84,6 +120,8 @@ class _ScanScreenState extends State<ScanScreen> {
     });
     qrViewController.scannedDataStream.listen((Barcode barcode) async {
       await qrViewController.pauseCamera();
+      // Navigator.push(context, MaterialPageRoute(
+      //   builder: (context) => showResult(context, barcode.code.toString())));
       showCustomDialog(barcode.code.toString());
     });
   }
@@ -103,9 +141,11 @@ class _ScanScreenState extends State<ScanScreen> {
     await qrViewController?.pauseCamera();
     final XFile? image =
         await imagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    if (image != null ) {
       String barcodeText = await QrCodeToolsPlugin.decodeFrom(image.path);
-      showCustomDialog(barcodeText);
+      
+      // showCustomDialog(barcodeText);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => QRDetails(qrCodeText: barcodeText)));
     } else
       qrViewController?.resumeCamera();
   }
@@ -128,11 +168,14 @@ class _ScanScreenState extends State<ScanScreen> {
     final bool notHaveCameraPermission =
         cameraPermissionStatus != PermissionStatus.granted;
     if (notHaveCameraPermission) requestCameraPermission();
+
+    // urlScanBloc = BlocProvider.of<UrlScanBloc>(context);
   }
 
   @override
   void dispose() {
     qrViewController?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -161,15 +204,15 @@ class _ScanScreenState extends State<ScanScreen> {
                                 icon: Icon(isFlashlightOff
                                     ? Icons.flash_off
                                     : Icons.flash_on),
-                                color: Colors.white,
+                                color: kPrimaryDark,
                                 onPressed: toggleCameraFlash),
                             IconButton(
                                 icon: const Icon(Icons.cameraswitch),
-                                color: Colors.white,
+                                color: kPrimaryDark,
                                 onPressed: flipCamera),
                             IconButton(
                                 icon: const Icon(Icons.photo_library),
-                                color: Colors.white,
+                                color: kPrimaryDark,
                                 disabledColor:
                                     const Color.fromRGBO(255, 255, 255, 0.3),
                                 onPressed: scanImageFromGallery)

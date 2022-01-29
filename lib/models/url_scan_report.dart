@@ -4,7 +4,6 @@ import 'package:secqrv3/models/url_scan.dart';
 
 class UrlScanReport extends Equatable {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 
   const UrlScanReport({

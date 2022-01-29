@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 class UrlScan extends Equatable {
   @override
-  // TODO: implement props
   List<Object> get props => [];
   final String keyname;
   final bool detected;
