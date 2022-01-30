@@ -7,6 +7,9 @@ import 'package:secqrv3/models/url_scan.dart';
 import 'package:secqrv3/themes/themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+
+//TODO: Import images into Firestore if possible
+//TODO: Fix this, add/update/delete to Firestore
 class HistoryListData extends StatelessWidget {
   const HistoryListData({ Key? key }) : super(key: key);
 

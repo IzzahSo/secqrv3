@@ -12,7 +12,7 @@ class UrlScanService {
   Dio dio = Dio();
   final String urlApi = "https://www.virustotal.com/vtapi/v2/url/report?";
   final String apiKey =
-      "a4a74bd3c0849dc2fb20c713114a08d3baef20ff9ee43f321707824d79c2ec89";
+      "5c7e41293d746ae46d26b055ceaed495c75f8655a93faaa4a405b02ae6082b05";
   static String urlResource = "";
   //Push Url to server
   Future<int?> pushUrlScan() async {

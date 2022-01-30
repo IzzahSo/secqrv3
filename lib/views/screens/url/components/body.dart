@@ -39,97 +39,71 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize!),
-                        child: TitleText(title: "Check URL Links",),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize!),
-                        child: InputAndScanButton(
-                          urlTextController: _urlTextController,
-                          scanBloc: _urlScanBloc,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: Text('Check URL Links'),),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 15.0,),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize!),
+                          child: InputAndScanButton(
+                            urlTextController: _urlTextController,
+                            scanBloc: _urlScanBloc,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize!*2),
-                        child: Divider(thickness: 2, color: kPrimaryColor.withOpacity(.2),),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                        child: BlocBuilder<UrlScanBloc, UrlScanState>(
-                          builder: (context, currentState){
-                            if(currentState is SucceedScanUrlState){
-                              if (currentState.urlScanReport.positives == -1) {
-                                //The site has not included in TotalVirus
-                                //background: Gray
-                                return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                                  decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: const <Widget>[
-                                      Text(
-                                        "This URL has never been registered!"
-                                            "\nPlease proceed with caution.",
-                                        style: TextStyle(
-                                          color: kPrimaryDark,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                        Icon(Icons.security_rounded, color: Colors.yellow,),
-                                    ],
-                                  ),
-                                );
-                              }
-                              else if (currentState.urlScanReport.positives != 0){
-                                //if site is found malicious
-                                //background: red
-                                return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                                  decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.circular(20),),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: const <Widget>[
-                                      Text(
-                                        "Malicious URL"
-                                            "\nDo not proceed to this site!!",
-                                        style: TextStyle(
-                                          color: kPrimaryDark,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.security_outlined,
-                                        color: Colors.black,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              else{
-                                //if its a safe url
-                                //background: green
-                                return Container(
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize!*2),
+                          child: Divider(thickness: 2, color: kPrimaryColor.withOpacity(.2),),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                          child: BlocBuilder<UrlScanBloc, UrlScanState>(
+                            builder: (context, currentState){
+                              if(currentState is SucceedScanUrlState){
+                                if (currentState.urlScanReport.positives == -1) {
+                                  //The site has not included in TotalVirus
+                                  //background: Gray
+                                  return Container(
                                     padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                                    decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(20),),
+                                    decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: const <Widget>[
                                         Text(
-                                          "Safe URL"
-                                          "\nDon't worry site is safe~",
+                                          "This URL has never been registered!"
+                                              "\nPlease proceed with caution.",
+                                          style: TextStyle(
+                                            color: kPrimaryDark,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                          Icon(Icons.security_rounded, color: Colors.yellow,),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                else if (currentState.urlScanReport.positives != 0){
+                                  //if site is found malicious
+                                  //background: red
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                    decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.circular(20),),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: const <Widget>[
+                                        Text(
+                                          "Malicious URL"
+                                              "\nDo not proceed to this site!!",
                                           style: TextStyle(
                                             color: kPrimaryDark,
                                             fontSize: 20,
@@ -137,126 +111,152 @@ class _BodyState extends State<Body> {
                                           ),
                                         ),
                                         Icon(
-                                          Icons.check_circle_outline,
-                                          color: Colors.green,
+                                          Icons.security_outlined,
+                                          color: Colors.black,
                                         ),
                                       ],
                                     ),
-                                );
-                              }
-                            }
-                            else if( currentState is FailedScanUrlState){
-                              return Container(
-                                    padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                                    decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(20),),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: const <Widget>[
-                                        Expanded(
-                                          child: Text(
+                                  );
+                                }
+                                else{
+                                  //if its a safe url
+                                  //background: green
+                                  return Container(
+                                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                      decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(20),),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: const <Widget>[
+                                          Text(
                                             "Safe URL"
-                                            "\nThe URL is not included in VitusTotal"
-                                            "\nPlease proceed with caution!",
+                                            "\nDon't worry site is safe~",
                                             style: TextStyle(
                                               color: kPrimaryDark,
-                                              fontSize: 15,
+                                              fontSize: 20,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        ),
-                                        Icon(
-                                          Icons.security_outlined,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                );
-                            }
-                            return Container(
-                              padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                              decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const <Widget>[
-                                  Text(
-                                    "Checking the URL in VirusTotal",
-                                    style: TextStyle(
-                                      color: kPrimaryDark,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                    Icon(Icons.security_rounded, color: Colors.white,),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TitleText(title: "Scan URL Report",),
-                            BlocBuilder<UrlScanBloc, UrlScanState>(
-                              builder: (context, currentState){
-                                if(currentState is SucceedScanUrlState){
-                                  return TitleText(title: "${currentState.urlScanReport.positives} / ${currentState.urlScanReport.total}");
-                                } else {
-                                  return TitleText(title: "0"); //Return there is no link inside the report yet
+                                          Icon(
+                                            Icons.check_circle_outline,
+                                            color: Colors.green,
+                                          ),
+                                        ],
+                                      ),
+                                  );
                                 }
-                              },
-                            )
-                          ],
+                              }
+                              else if( currentState is FailedScanUrlState){
+                                return Container(
+                                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                      decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(20),),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: const <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "The URL is not included in VitusTotal"
+                                              "\nPlease proceed with caution!",
+                                              style: TextStyle(
+                                                color: kPrimaryDark,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.security_outlined,
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      ),
+                                  );
+                              }
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                                decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(20),),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: const <Widget>[
+                                    Text(
+                                      "Checking the URL in VirusTotal",
+                                      style: TextStyle(
+                                        color: kPrimaryDark,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                      Icon(Icons.security_rounded, color: Colors.white,),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      //need to simplify this, create another class, use flatbutton and direct it to the details stuff
-                      Padding(
-                        padding: EdgeInsets.only(left: SizeConfig.defaultSize! * 2, right: SizeConfig.defaultSize! * 2, bottom: SizeConfig.defaultSize! * 2),
-                        child: BlocBuilder<UrlScanBloc, UrlScanState>(
-                          builder:(context, currentstate) {
-                            if(currentstate is InitialScanUrlState){
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize!*2, vertical: SizeConfig.defaultSize! * 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TitleText(title: "Scan URL Report",),
+                              BlocBuilder<UrlScanBloc, UrlScanState>(
+                                builder: (context, currentState){
+                                  if(currentState is SucceedScanUrlState){
+                                    return TitleText(title: "${currentState.urlScanReport.positives} / ${currentState.urlScanReport.total}");
+                                  } else {
+                                    return TitleText(title: "0"); //Return there is no link inside the report yet
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                        //need to simplify this, create another class, use flatbutton and direct it to the details stuff
+                        Padding(
+                          padding: EdgeInsets.only(left: SizeConfig.defaultSize! * 2, right: SizeConfig.defaultSize! * 2, bottom: SizeConfig.defaultSize! * 2),
+                          child: BlocBuilder<UrlScanBloc, UrlScanState>(
+                            builder:(context, currentstate) {
+                              if(currentstate is InitialScanUrlState){
+                                return OutputText(text: "Please input your URL!",);
+                              }
+                              if(currentstate is LoadingScanUrlState){
+                                return LoadingWidget(imageloading: "assets/gif/spinner.gif",);
+                              }
+                              if(currentstate is SucceedScanUrlState){
+                                if(currentstate.urlScan.isEmpty){
+                                  return OutputText(text:"Scan information is empty !");
+                                }
+                                return GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: currentstate.urlScan.length,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: SizeConfig.orientation ==
+                                            Orientation.landscape ? 2 : 1,
+                                        childAspectRatio: 2.1,
+                                        mainAxisSpacing: SizeConfig.defaultSize! * 2,
+                                        crossAxisSpacing: SizeConfig.defaultSize! * 2
+                                    ),
+                                    itemBuilder: (context, index) => UrlScanCard(urlScan:currentstate.urlScan[index])
+                                );
+                              }
+                              if(currentstate is FailedScanUrlState){
+                                return OutputText(text: "Some errors:\nPlease check your internet connection"
+                                    "\nYour input url is not correct"
+                                    "\nServer is busy now !",);
+                              }
                               return OutputText(text: "Please input your URL!",);
                             }
-                            if(currentstate is LoadingScanUrlState){
-                              return LoadingWidget(imageloading: "assets/gif/spinner.gif",);
-                            }
-                            if(currentstate is SucceedScanUrlState){
-                              if(currentstate.urlScan.isEmpty){
-                                return OutputText(text:"Scan information is empty !");
-                              }
-                              return GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: currentstate.urlScan.length,
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: SizeConfig.orientation ==
-                                          Orientation.landscape ? 2 : 1,
-                                      childAspectRatio: 2.1,
-                                      mainAxisSpacing: SizeConfig.defaultSize! * 2,
-                                      crossAxisSpacing: SizeConfig.defaultSize! * 2
-                                  ),
-                                  itemBuilder: (context, index) => UrlScanCard(urlScan:currentstate.urlScan[index])
-                              );
-                            }
-                            if(currentstate is FailedScanUrlState){
-                              return OutputText(text: "Some errors:\nPlease check your internet connection"
-                                  "\nYour input url is not correct"
-                                  "\nServer is busy now !",);
-                            }
-                            return OutputText(text: "Please input your URL!",);
-                          }
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ),
-            ],
-          )
-        ),
-      ],
+                      ],
+                    ),
+                  )
+                ),
+              ],
+            )
+          ),
+        ],
+      ),
     );
   }
 }

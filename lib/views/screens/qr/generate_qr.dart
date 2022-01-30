@@ -5,15 +5,16 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:secqrv3/AESEncrypt/aes.dart';
+// import 'package:secqrv3/AESEncrypt/aes.dart';
 import 'package:secqrv3/repository/database_serv.dart';
+import 'package:secqrv3/themes/themes.dart';
+import 'package:secqrv3/views/screens/encrypt_qr/encrypt_qr_screen.dart';
 // import 'package:secqrv3/views/widgets/encrypt_button.dart';
 import 'package:secqrv3/views/widgets/input.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:secqrv3/views/widgets/save_button.dart';
 
-//TODO: Import images into Firestore if possible
 
 class GenerateQR extends StatefulWidget {
   const GenerateQR();
@@ -27,8 +28,6 @@ class _GenerateQRState extends State<GenerateQR> {
   final ScreenshotController screenshotController = ScreenshotController();
   PermissionStatus storagePermissionStatus = PermissionStatus.denied;
 
-  AESEncryption encryption = new AESEncryption();
-
   void notifyUserWithSnackBar(String message, int milliseconds) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -36,13 +35,13 @@ class _GenerateQRState extends State<GenerateQR> {
         duration: Duration(milliseconds: milliseconds)));
   }
 
-  void encryptCode(String text) {
-    if (textEditingController.text.isNotEmpty){
-      encryption.encryptMsg(textEditingController.text).base16;
-      FirestoreProvider().updateText(
-          title: "Generated QR", qrCodeText: textEditingController.text,);
-    }
-  }
+  // void encryptCode(String text) {
+  //   if (textEditingController.text.isNotEmpty){
+  //     encryption.encryptMsg(textEditingController.text).base16;
+  //     FirestoreProvider().updateText(
+  //         title: "Generated QR", qrCodeText: textEditingController.text,);
+  //   }
+  // }
 
   void saveQrCode() {
     if (storagePermissionStatus.isGranted &&
@@ -97,26 +96,40 @@ class _GenerateQRState extends State<GenerateQR> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-              padding: const EdgeInsets.all(20),
-              child: Input(textEditingController, saveQrCode)),
-          const SizedBox(height: 20),
-          Screenshot(
-              controller: screenshotController,
-              child: QrImage(
-                  data: textEditingController.text,
-                  size: 250,
-                  backgroundColor: Colors.white)),
-          const SizedBox(height: 20),
-          // Padding(
-          //   padding: const EdgeInsets.all(20),
-          //   child: EncryptButton(saveQrCode),
-          // ),
-          Padding(
-              padding: const EdgeInsets.all(20), child: SaveButton(saveQrCode)),
-        ]);
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: Text('Generate QR'),),
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+                padding: const EdgeInsets.all(20),
+                child: Input(textEditingController, saveQrCode)),
+            const SizedBox(height: 20),
+            Screenshot(
+                controller: screenshotController,
+                child: QrImage(
+                    data: textEditingController.text,
+                    size: 250,
+                    backgroundColor: Colors.white)),
+            const SizedBox(height: 15),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: FlatButton(
+                color: kSecondaryDark,
+                onPressed: () => Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => EncryptQRScreen())
+                ), 
+                child: const Text('AES Encrypt QR', style: TextStyle(color: Colors.white),)),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(20),
+            //   child: EncryptButton(saveQrCode),
+            // ),
+            // Padding(
+            //     padding: const EdgeInsets.all(20), child: SaveButton(saveQrCode)),
+          ]),
+    );
   }
 }

@@ -11,11 +11,9 @@ import 'package:secqrv3/models/url_scan.dart';
 import 'package:secqrv3/models/url_scan_report.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
 import 'package:secqrv3/themes/themes.dart';
-import 'package:secqrv3/views/screens/qr_details.dart';
-import 'package:secqrv3/views/screens/qr_result.dart';
+import 'package:secqrv3/views/screens/qr/qr_details.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
-import 'package:secqrv3/views/widgets/custom_dialog/warning_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:secqrv3/views/widgets/grant_permission_button.dart';
 import 'package:secqrv3/views/widgets/custom_dialog/custom_dialog.dart';
@@ -33,49 +31,19 @@ class _ScanScreenState extends State<ScanScreen> {
   QRViewController? qrViewController;
   PermissionStatus cameraPermissionStatus = PermissionStatus.denied;
   bool isFlashlightOff = false;
-  final UrlScan urlScan = UrlScan();
-  UrlScanReport ? urlScanReport = UrlScanReport();
-  UrlScanBloc ? urlScanBloc;
-
   
   final _controller = TextEditingController();
 
   get create => null;
 
   void showCustomDialog(String barcodeText) async {
-    final bool canLaunchUrl = await canLaunch(barcodeText);
-    // var input = barcodeText;
-  
-    // showDialog(
-    //     context: context,
-    //     builder: (_) => CustomDialog(
-    //         barcodeText, canLaunchUrl, qrViewController!.resumeCamera,),
-    //     barrierDismissible: false,
-    //     useSafeArea: true);
-    
-    // _urlScanBloc = BlocProvider.of<UrlScanBloc>(context);
-    UrlScanService.urlResource = barcodeText;
-    urlScanBloc?.add(FetchUrlScanReportEvent());
-    
-    //somehow it doesn't retrieve
-    if(urlScanReport?.positives != 0){
-        //return malicious warning
-        showDialog(
-            context: context,
-            builder: (_) =>
-                WarningDialog(barcodeText, qrViewController!.resumeCamera),
-            barrierDismissible: false,
-            useSafeArea: true);
-    }
-    else {
-        showDialog(
-            context: context,
-            builder: (_) => CustomDialog(
-                barcodeText, canLaunchUrl, qrViewController!.resumeCamera),
-            barrierDismissible: false,
-            useSafeArea: true);
-    }
-      
+    // final bool canLaunchUrl = await canLaunch(barcodeText);
+      showDialog(
+          context: context,
+          builder: (_) => CustomDialog(
+              barcodeText, qrViewController!.resumeCamera),
+          barrierDismissible: false,
+          useSafeArea: true);
   }
 
   // Future<Widget> showResult(BuildContext context, String barcodeText) async {
@@ -122,7 +90,11 @@ class _ScanScreenState extends State<ScanScreen> {
       await qrViewController.pauseCamera();
       // Navigator.push(context, MaterialPageRoute(
       //   builder: (context) => showResult(context, barcode.code.toString())));
-      showCustomDialog(barcode.code.toString());
+      // showCustomDialog(barcode.code.toString());
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => QRDetails(qrCodeText: barcode.code.toString())));
     });
   }
 
@@ -144,8 +116,17 @@ class _ScanScreenState extends State<ScanScreen> {
     if (image != null ) {
       String barcodeText = await QrCodeToolsPlugin.decodeFrom(image.path);
       
+      final bool canLaunchUrl = await canLaunch(barcodeText);
       // showCustomDialog(barcodeText);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => QRDetails(qrCodeText: barcodeText)));
+      if(canLaunchUrl){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => QRDetails(qrCodeText: barcodeText)));
+      }else{
+        showCustomDialog(barcodeText);
+      }
+      
     } else
       qrViewController?.resumeCamera();
   }

@@ -6,14 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:secqrv3/themes/themes.dart';
-import 'package:secqrv3/views/screens/generate_qr.dart';
+import 'package:secqrv3/views/screens/encrypt_qr/encrypt_qr_screen.dart';
+import 'package:secqrv3/views/screens/qr/generate_qr.dart';
 import 'package:secqrv3/views/screens/history.dart';
 import 'package:secqrv3/views/screens/homepage.dart';
+import 'package:secqrv3/views/screens/vpn/vpn_screen.dart';
 import 'package:secqrv3/views/viewmodel/bloc/bloc_observer.dart';
 import 'package:secqrv3/views/screens/url/url_screen.dart';
 // import 'package:secqrv3/views/widgets/snake_navigation_bar.dart';
 
-//TODO: Add routes for page navigation
 
 Future<void> main() async {
   Bloc.observer = CommonBlocObserver();
@@ -51,14 +52,16 @@ class _MyAppState extends State<MyApp> {
 
   final List<BottomNavigationBarItem> _bottomNavigationBarItems = [
     const BottomNavigationBarItem(
+        icon: Icon(Icons.lock), label: 'AES Encrypted QR'),
+    const BottomNavigationBarItem(
         icon: Icon(Icons.qr_code_rounded), label: 'QR Generator'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.qr_code_scanner_rounded), label: 'QR Scanner'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.check_circle_outline_rounded), label: 'Check link'),
     //need to edit Firebase page
-    // const BottomNavigationBarItem(
-    //   icon: Icon(Icons.history_outlined), label: 'History'),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.history_outlined), label: 'History'),
   ];
 
   @override
@@ -77,13 +80,14 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: _selectedItemPosition ==0 
-            ? const GenerateQR()
+            ? const VPNScreen()
             : _selectedItemPosition == 1
-              ? HomePage()
-              : UrlScreen(),
-              // : _selectedItemPosition == 2
-              //   ? UrlScreen() 
-              //   : HistoryListData(),
+              ? GenerateQR()
+              : _selectedItemPosition == 2
+                ? HomePage()
+              : _selectedItemPosition == 3
+                ? UrlScreen() 
+                : HistoryListData(),
               //need to tweak code by adding routes for encrypted qr and database
 
         bottomNavigationBar: SnakeNavigationBar.color(
