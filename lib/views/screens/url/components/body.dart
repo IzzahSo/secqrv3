@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secqrv3/themes/themes.dart';
@@ -23,6 +24,9 @@ class _BodyState extends State<Body> {
 
   final _urlTextController = TextEditingController();
   UrlScanBloc ? _urlScanBloc;
+
+  final CollectionReference urlCollection =
+      FirebaseFirestore.instance.collection('url');
 
   @override 
   void initState(){
@@ -69,6 +73,13 @@ class _BodyState extends State<Body> {
                           child: BlocBuilder<UrlScanBloc, UrlScanState>(
                             builder: (context, currentState){
                               if(currentState is SucceedScanUrlState){
+                                urlCollection.add({
+                                  'title' : 'Check URL List in VirusTotal',
+                                  'url': _urlTextController.text,
+                                  'positives'  : '${currentState.urlScanReport.positives}',
+                                  'total' : '${currentState.urlScanReport.total}',
+                                  }
+                                ).then((value) => print("Data added"));
                                 if (currentState.urlScanReport.positives == -1) {
                                   //The site has not included in TotalVirus
                                   //background: Gray

@@ -11,5 +11,5 @@ class AESEncryption {
 
   decryptMsg(encrypt.Encrypted text) => encrypter.decrypt(text, iv: iv);
 
-  getCode(String encoded) => encrypt.Encrypted.fromBase16(encoded);
+  getCode(String encoded) => encrypt.Encrypted.fromBase64(encoded);
 }

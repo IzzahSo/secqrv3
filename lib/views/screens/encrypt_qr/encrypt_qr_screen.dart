@@ -9,9 +9,9 @@ import 'package:screenshot/screenshot.dart';
 import 'package:secqrv3/AESEncrypt/aes.dart';
 import 'package:secqrv3/themes/themes.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:secqrv3/views/screens/encrypt_qr/scan_encrypt_qr.dart';
 import 'package:secqrv3/views/widgets/save_button.dart';
 
-//TODO: add explanation on AES
 class EncryptQRScreen extends StatefulWidget {
   const EncryptQRScreen();
 
@@ -45,14 +45,13 @@ class _EncryptQRScreenState extends State<EncryptQRScreen> {
   // }
 
   void saveQrCode() {
-    if (storagePermissionStatus.isGranted &&
-        myController.text.isNotEmpty)
+    if (storagePermissionStatus.isGranted)
       screenshotController.capture().then((Uint8List? qrcodeImage) async {
         if (qrcodeImage != null) {
           final String captureTimestamp = new DateTime.now().toString();
           await ImageGallerySaver.saveImage(Uint8List.fromList(qrcodeImage),
-              quality: 100, name: captureTimestamp);
-          notifyUserWithSnackBar('QR code saved in your gallery!', 1500);
+              quality: 100, name: "Encrypted QR");
+          notifyUserWithSnackBar('AES QR code saved in your gallery!', 1500);
         }
       });
     else
@@ -116,6 +115,7 @@ class _EncryptQRScreenState extends State<EncryptQRScreen> {
                 cursorColor: kPrimaryDark,
                 keyboardType: TextInputType.url,
                 style: const TextStyle(color: kPrimaryDark, fontSize: 20),
+                // onSubmitted: (_) => saveQrCode(),
                 decoration: InputDecoration(
                     labelText: 'Write a text, key to generate an encrypted AES QR Code',
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -132,9 +132,10 @@ class _EncryptQRScreenState extends State<EncryptQRScreen> {
               ),
             ),
             const SizedBox(height: 15,),
-            SafeArea(
+            Screenshot(
+              controller: screenshotController,
               child: QrImage(
-                data: qrData,
+                data: encryption.encryptMsg(qrData).base64,
                 size: 250,
                 backgroundColor: Colors.white, 
               ),
@@ -161,7 +162,18 @@ class _EncryptQRScreenState extends State<EncryptQRScreen> {
                 ),
               ],
             ),
-            
+            const SizedBox(
+              height: 5,
+            ),
+            FlatButton(
+              child: Text(
+                'Scan Encrypted QR',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: kSecondaryDark,
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ScanEncryptQR())),
+            ),
             const SizedBox(height: 20,), 
             if(qrData != "") 
               Column(
@@ -180,6 +192,14 @@ class _EncryptQRScreenState extends State<EncryptQRScreen> {
                               style: TextStyle(fontSize: 15.0),
                             ),
                           ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: Text(
+                            
+                        //     encryption.decryptMsg(encryption.getCode(qrData)).toString(),
+                        //     style: TextStyle(fontSize: 15.0),
+                        //   ),
+                        // ),
                         ],
                       ),
                     )),

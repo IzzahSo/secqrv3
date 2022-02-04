@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
 import 'package:secqrv3/themes/themes.dart';
+import 'package:secqrv3/views/screens/url/components/body.dart';
 import 'package:secqrv3/views/screens/url/components/input_and_scan_button.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
@@ -17,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class QRDetails extends StatefulWidget {
   const QRDetails({required this.qrCodeText});
-  
+
   final String qrCodeText;
 
   @override
@@ -30,7 +31,7 @@ class _QRDetailsState extends State<QRDetails> {
       FirebaseFirestore.instance.collection('url');
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     UrlScanService.urlResource = "";
 
@@ -52,62 +53,74 @@ class _QRDetailsState extends State<QRDetails> {
 
   Widget fetchQRDetails(BuildContext context) {
     String qrText = widget.qrCodeText;
-    
-    return StreamBuilder<QuerySnapshot>(
-      stream: collectionReference.snapshots().asBroadcastStream(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if(snapshot.hasData){ 
-          // return Center(child: CircularProgressIndicator(),);
-          if(snapshot.data!.docs.isEmpty){
-            return Center(child: SafeArea(child: Text("The URL is not updated in our database\nGo to 'Check URL links' page to check in VirusTotal's server")),);
-          }
-          else{
-            return Column(children: [
-              ...snapshot.data!.docs
-                .where((QueryDocumentSnapshot<Object?> element) =>
-                    element['url']
-                        .toString()
-                        .toLowerCase()
-                        .contains(qrText.toLowerCase()))
-                .map((QueryDocumentSnapshot<Object?> data) {
-                  final url = data.get('url');
-                  final positives = data['positives'];
-                  final total = data['total'];
 
-                  if(positives == 0){
-                    return Center(
-                      child: Column(
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Qr Code Text: ',
+                  style: TextStyle(fontSize: 18, color: kPrimaryDark),
+                ),
+                Expanded(
+                  child: Text(
+                    qrText,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        StreamBuilder<QuerySnapshot>(
+          stream: collectionReference.snapshots().asBroadcastStream(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+
+            if (snapshot.hasData) {
+              // return Center(child: CircularProgressIndicator(),);
+              if (snapshot.data!.docs.isEmpty) {
+                return Center(
+                  child: SafeArea(
+                      child: Text(
+                          "The URL is not updated in our database\nGo to 'Check URL links' page to check in VirusTotal's server")),
+                );
+              } else {
+                return Stack(children: [
+                  ...snapshot.data!.docs
+                      .where((QueryDocumentSnapshot<Object?> element) =>
+                          element['url']
+                              .toString()
+                              .toLowerCase()
+                              .contains(qrText.toLowerCase()))
+                      .map((QueryDocumentSnapshot<Object?> data) {
+                    // final url = data.get('url');
+                    final positives = data['positives'];
+                    final total = data['total'];
+
+                    if (positives == 0 || positives == "0") {
+                      return Center(
+                        child: Column(
                           children: [
+                            
                             Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[    
-                                Text(
-                                  'Qr Code Text: ',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: kPrimaryDark),
-                                ),
-                                Text(
-                                  url,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  padding: EdgeInsets.all(20.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[300],
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                ),
-                                ],
-                              ),   
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Container(
-                                padding: EdgeInsets.all(20.0),
-                                  decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(20),),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     // crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const <Widget> [
+                                    children: const <Widget>[
                                       Text(
                                         "Safe URL",
                                         style: TextStyle(
@@ -116,16 +129,17 @@ class _QRDetailsState extends State<QRDetails> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(width: 20,),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
                                       Icon(
                                         Icons.check_circle_outline,
                                         color: Colors.white,
                                         size: 30,
                                       ),
-                                    ],  
+                                    ],
                                   ),
-                                )
-                              ),
+                                )),
                             Padding(
                               padding: EdgeInsets.all(10),
                               child: Row(
@@ -154,103 +168,106 @@ class _QRDetailsState extends State<QRDetails> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   FlatButton(
-                                    onPressed: () => copyQrCodeTextToClipboard(context), 
-                                    child: const Text('Copy', style: TextStyle(color: kPrimaryLight),),
+                                    onPressed: () =>
+                                        copyQrCodeTextToClipboard(context),
+                                    child: const Text(
+                                      'Copy',
+                                      style: TextStyle(color: kPrimaryLight),
+                                    ),
                                     color: kPrimaryDark,
                                   ),
-                                  SizedBox(width: 15,),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
                                   FlatButton(
-                                    onPressed: () =>
-                                        launchUrlFromQrCodeText(),
+                                    onPressed: () => launchUrlFromQrCodeText(),
                                     child: const Text(
                                       'Open',
                                       style: TextStyle(color: kPrimaryLight),
                                     ),
                                     color: kPrimaryDark,
-                                ),
+                                  ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                    );
-                  }
-                  else if (positives != 0) {
-                    return Center(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Qr Code Text: ',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: kPrimaryDark),
+                      );
+                    } if (positives != 0  || positives != "0") {
+                      return Center(
+                        child: Column(
+                          children: [
+                            // Padding(
+                            //   padding: EdgeInsets.all(10),
+                            //   child: Center(
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: <Widget>[
+                            //         Text(
+                            //           'Qr Code Text: ',
+                            //           style: TextStyle(
+                            //               fontSize: 18, color: kPrimaryDark),
+                            //         ),
+                            //         Expanded(
+                            //           child: Text(
+                            //             url,
+                            //             style: TextStyle(
+                            //                 fontSize: 15,
+                            //                 fontWeight: FontWeight.bold,
+                            //                 color: kPrimaryDark),
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            //edit yg malicious/safe
+                            Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  padding: EdgeInsets.all(20.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red[300],
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  Text(
-                                    url,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: kPrimaryDark
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          //edit yg malicious/safe
-                          Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Container(
-                                padding: EdgeInsets.all(20.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.red[300],
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: const <Widget>[
-                                        Text(
-                                          "Malicious URL",
-                                          style: TextStyle(
-                                            color: kPrimaryDark,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SafeArea(
-                                          child: Text(
-                                            "\nPlease do not proceed to this site!",
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: const <Widget>[
+                                          Text(
+                                            "Malicious URL",
                                             style: TextStyle(
                                               color: kPrimaryDark,
-                                              fontSize: 15,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Icon(
-                                      Icons.security_outlined,
-                                      color: Colors.black,
-                                      size: 30,
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child:
-                              Row(
+                                          SafeArea(
+                                            child: Text(
+                                              "\nPlease do not proceed to this site!",
+                                              style: TextStyle(
+                                                color: kPrimaryDark,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Icon(
+                                        Icons.security_outlined,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
@@ -269,28 +286,118 @@ class _QRDetailsState extends State<QRDetails> {
                                   )
                                 ],
                               ),
-                              
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return OutputText(
+                      text: "Fetching data...",
+                    );
+                  })
+                ]);
+              }
+            } 
+            if(!snapshot.hasData){
+              return Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const <Widget>[
+                              Text(
+                                "The URL is not in our database.\nCopy the link, click the 'Check' button, and paste there to check its status",
+                                style: TextStyle(
+                                  color: kPrimaryDark,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Icon(
+                                Icons.check_circle_outline,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
-                  }
-                  return OutputText(text: "Fetching data...",);
-              })
-            ]);
+            } else if (snapshot.hasError) {
+              return const Center(child: Text('Error fetching data'));
+            } else {
+              // return const Center(child: CircularProgressIndicator(),);
+              return Center(
+                  child: Column(children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Qr Code Text: ',
+                        style: TextStyle(fontSize: 18, color: kPrimaryDark),
+                      ),
+                      Expanded(
+                        child: Text(
+                          qrText,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () => copyQrCodeTextToClipboard(context),
+                        child: const Text(
+                          'Copy',
+                          style: TextStyle(color: kPrimaryLight),
+                        ),
+                        color: kPrimaryDark,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      FlatButton(
+                        onPressed: () => BlocProvider(
+                          create: (context) => UrlScanBloc(),
+                          child: Body()
+                        ),
+                        child: const Text(
+                          'Check',
+                          style: TextStyle(color: kPrimaryLight),
+                        ),
+                        color: kPrimaryDark,
+                      ),
+                    ],
+                  ),
+                ),
+              ])); 
+            }
           }
-        }
-        else if(snapshot.hasError){
-          return const Center(child: Text('Error fetching data'));
-        }
-        else {
-          return const Center(child: CircularProgressIndicator(),);          
-        }
-      }
-
+          ),
+      ],
     );
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -306,13 +413,13 @@ class _QRDetailsState extends State<QRDetails> {
         appBar: AppBar(
           title: const Text('QR Details'),
           centerTitle: true,
-        ), 
+        ),
         body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.all(20.0),
-          child: Center(
-            child: Column(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: Column(
               children: [
                 const SizedBox(height: 20.0),
                 QrImage(
@@ -323,10 +430,7 @@ class _QRDetailsState extends State<QRDetails> {
                 const SizedBox(height: 20.0),
                 fetchQRDetails(context)
               ],
-            )
-            
-          )
-        ),
+            ))),
       ),
     );
   }

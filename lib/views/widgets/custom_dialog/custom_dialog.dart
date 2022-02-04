@@ -76,9 +76,6 @@ class CustomDialog extends StatelessWidget {
     //   ],
     // );
 
-
-  
-      
     return AlertDialog(
       scrollable: true,
       title: const Text('QR code text:'),
