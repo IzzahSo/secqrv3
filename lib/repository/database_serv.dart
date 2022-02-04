@@ -8,8 +8,6 @@ import 'package:secqrv3/models/url_scan.dart';
 import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
 import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
 
-//TODO: insert QR image into Firestore storage
-
 class FirestoreProvider{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

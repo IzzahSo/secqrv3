@@ -11,7 +11,6 @@ import 'package:secqrv3/views/screens/qr/qr_details.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-//TODO: Import images into Firestore if possible
 //TODO: Fix this, add/update/delete to Firestore
 class HistoryListData extends StatelessWidget {
   const HistoryListData({ Key? key }) : super(key: key);
@@ -54,6 +53,7 @@ class HistoryListData extends StatelessWidget {
               // var doc = snapshot.data?.docs[index].get('field');
               String positives = snapshot.data?.docs[index].get('positives');
               String url = snapshot.data?.docs[index].get('url');
+              
               return Card(
                 child: ListTile(
                   title: Text(

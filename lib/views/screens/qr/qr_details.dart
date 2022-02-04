@@ -16,6 +16,7 @@ import 'package:secqrv3/views/widgets/components/SizeConfig.dart';
 import 'package:secqrv3/views/widgets/components/output_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+//TODO: add vpn for safe browsing when launch url
 class QRDetails extends StatefulWidget {
   const QRDetails({required this.qrCodeText});
 
@@ -103,8 +104,126 @@ class _QRDetailsState extends State<QRDetails> {
                     // final url = data.get('url');
                     final positives = data['positives'];
                     final total = data['total'];
-
-                    if (positives == 0 || positives == "0") {
+                    
+                    if(qrText.toLowerCase().contains('http://') && positives == "0") 
+                      return Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  padding: EdgeInsets.all(20.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow[200],
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    // crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: const <Widget>[
+                                      Text(
+                                        "Insecure URL",
+                                        style: TextStyle(
+                                          color: kPrimaryDark,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Icon(
+                                        Icons.security_outlined,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: SafeArea(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Text(
+                                      'The url is using insecure connection: http',
+                                      style: TextStyle(
+                                        color: kPrimaryDark,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Please turn on VPN for safe browsing.\nProceed with caution!!',
+                                        style: TextStyle(color: kPrimaryColor),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    // Text(
+                                    //     'Do not give your private information, passwords on the site'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'VirusTotal detection: ',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  Text(
+                                    '$positives / $total',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.green[900],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  FlatButton(
+                                    onPressed: () =>
+                                        copyQrCodeTextToClipboard(context),
+                                    child: const Text(
+                                      'Copy',
+                                      style: TextStyle(color: kPrimaryLight),
+                                    ),
+                                    color: kPrimaryDark,
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  FlatButton(
+                                    onPressed: () =>
+                                        launchUrlFromQrCodeText(),
+                                    child: const Text(
+                                      'Open',
+                                      style: TextStyle(color: kPrimaryLight),
+                                    ),
+                                    color: kPrimaryDark,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    if (positives == 0 || positives == "0" ) {
                       return Center(
                         child: Column(
                           children: [
