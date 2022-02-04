@@ -48,7 +48,7 @@ class _EncryptQRScreenState extends State<EncryptQRScreen> {
     if (storagePermissionStatus.isGranted)
       screenshotController.capture().then((Uint8List? qrcodeImage) async {
         if (qrcodeImage != null) {
-          final String captureTimestamp = new DateTime.now().toString();
+          // final String captureTimestamp = new DateTime.now().toString();
           await ImageGallerySaver.saveImage(Uint8List.fromList(qrcodeImage),
               quality: 100, name: "Encrypted QR");
           notifyUserWithSnackBar('AES QR code saved in your gallery!', 1500);
