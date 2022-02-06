@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:secqrv3/models/url_scan.dart';
 import 'package:secqrv3/repository/database_serv.dart';
-import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
-import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
+import 'package:secqrv3/viewmodel/bloc/url_scan_bloc.dart';
+import 'package:secqrv3/viewmodel/events/url_scan_event.dart';
 import 'package:secqrv3/views/widgets/components/alert_dialog.dart';
 import 'package:secqrv3/views/widgets/components/input_container.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
@@ -25,7 +25,7 @@ class InputAndScanButton extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: InputContainer(hinttext: "Input url link", myController: urlTextController,)),
+        Expanded(child: InputContainer(hinttext: "Check using VirusTotal API", myController: urlTextController,)),
         SizedBox(width:  defaultSize,),
         FlatButton(
           onPressed: () {
@@ -60,7 +60,7 @@ class InputAndScanButton extends StatelessWidget {
           child: Text("Check", style: Theme.of(context).textTheme.headline6?.copyWith(
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontSize: SizeConfig.defaultSize!*1.9,
+            fontSize: SizeConfig.defaultSize!*1.5,
           ),),
         ),
       ],

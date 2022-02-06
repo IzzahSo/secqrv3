@@ -11,7 +11,7 @@ import 'package:secqrv3/views/screens/qr/generate_qr.dart';
 import 'package:secqrv3/views/screens/history.dart';
 import 'package:secqrv3/views/screens/homepage.dart';
 import 'package:secqrv3/views/screens/vpn/vpn_screen.dart';
-import 'package:secqrv3/views/viewmodel/bloc/bloc_observer.dart';
+import 'package:secqrv3/viewmodel/bloc/bloc_observer.dart';
 import 'package:secqrv3/views/screens/url/url_screen.dart';
 // import 'package:secqrv3/views/widgets/snake_navigation_bar.dart';
 

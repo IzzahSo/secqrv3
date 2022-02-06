@@ -2,8 +2,8 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secqrv3/services/url_scan_service.dart';
-import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
-import 'package:secqrv3/views/viewmodel/states/url_scan_state.dart';
+import 'package:secqrv3/viewmodel/events/url_scan_event.dart';
+import 'package:secqrv3/viewmodel/states/url_scan_state.dart';
 
 class UrlScanBloc extends Bloc<UrlScanEvent, UrlScanState>{
   UrlScanBloc() : super(InitialScanUrlState());

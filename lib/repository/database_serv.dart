@@ -5,8 +5,8 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:secqrv3/models/url_scan.dart';
-import 'package:secqrv3/views/viewmodel/bloc/url_scan_bloc.dart';
-import 'package:secqrv3/views/viewmodel/events/url_scan_event.dart';
+import 'package:secqrv3/viewmodel/bloc/url_scan_bloc.dart';
+import 'package:secqrv3/viewmodel/events/url_scan_event.dart';
 
 class FirestoreProvider{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -39,6 +39,8 @@ class FirestoreProvider{
     required String url,
     required int positives,
     required int total,
+    required int statusCode,
+    required DateTime scanDate,
   }) async {
     DocumentReference documentReference = urlCollection.doc();
 
@@ -47,6 +49,8 @@ class FirestoreProvider{
       "url": url,
       "positives": positives,
       "total": total,
+      "scanDate": scanDate,
+      "statusCode": statusCode
     };
 
     await documentReference
