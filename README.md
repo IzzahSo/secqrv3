@@ -1,16 +1,8 @@
 # secqrv3
 
-A secure QR Scanner
+A QR Scanner that detects whether the URL embedded in QR is malicious or safe using VirusTotal API and Neural Network Deep Learning.
+This app is developed using Flutter.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![image](https://user-images.githubusercontent.com/43489693/153545170-5b3688be-4b4c-41f4-a0f6-ddf7c492b33b.png)
